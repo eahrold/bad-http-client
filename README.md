@@ -1,4 +1,4 @@
-Demonstrates Inconsistent PathVariable
+# Demonstrates Inconsistent with `@PathVariable`
 
 Given the following controller
 ```java
