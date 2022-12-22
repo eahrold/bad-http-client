@@ -31,7 +31,7 @@ interface BrokenClient {
 }
 ```
 
-The error that is thrown.
+The error that is thrown by the `BrokenClient`
 
 ```shell
 Caused by: java.net.URISyntaxException: Illegal character in path at index 6: /test/{tenantId}/here?tenantId=cc76f96d-e721-4a6b-b7bc-50f634e3bba1
