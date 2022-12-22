@@ -1,14 +1,38 @@
-## Micronaut 3.7.5 Documentation
+Demonstrates Inconsistent PathVariable
 
-- [User Guide](https://docs.micronaut.io/3.7.5/guide/index.html)
-- [API Reference](https://docs.micronaut.io/3.7.5/api/index.html)
-- [Configuration Reference](https://docs.micronaut.io/3.7.5/guide/configurationreference.html)
-- [Micronaut Guides](https://guides.micronaut.io/index.html)
----
+Given the following controller
+```java
+@Controller("/test/{tenantId}")
+class HereController {
 
-- [Shadow Gradle Plugin](https://plugins.gradle.org/plugin/com.github.johnrengelman.shadow)
-## Feature http-client documentation
+    @Get("here")
+    HttpResponse<String> here(@PathVariable UUID tenantId) {
+        String response = "welcome to "+tenantId.toString()
+        return HttpResponse.ok(response)
+    }
+}
+```
 
-- [Micronaut HTTP Client documentation](https://docs.micronaut.io/latest/guide/index.html#httpClient)
+I would expect both style of clients to work.
 
+```java
+@Client(id="my-service", path = "/test")
+interface WorkingClient {
+    @Get("/{tenantId}/here")
+    HttpResponse<String> here(@PathVariable UUID tenantId)
+}
+```
 
+```java
+@Client(id="my-service", path = "/test/{tenantId}")
+interface BrokenClient {
+    @Get("/here")
+    HttpResponse<String> here(@PathVariable UUID tenantId)
+}
+```
+
+The error that is thrown.
+
+```shell
+Caused by: java.net.URISyntaxException: Illegal character in path at index 6: /test/{tenantId}/here?tenantId=cc76f96d-e721-4a6b-b7bc-50f634e3bba1
+```
